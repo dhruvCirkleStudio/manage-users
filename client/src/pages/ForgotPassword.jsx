@@ -4,26 +4,22 @@ import axios from "axios";
 import axiosInstance from "../utils/axiosInstance";
 import { toast } from "../utils/ToastNotification";
 
-export default function SendOtp() {
+export default function ForgotPassword() {
   const navigate = useNavigate();
   const [error, setError] = useState();
   const [formData, setFormData] = useState({
-    email: "",
+    otp:"",
     password: "",
   });
 
+  const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
+
   const validate = () => {
     const errors = {};
-
-    if (typeof formData.email !== "string" || formData.email.trim() === "") {
-      errors.email = "Please enter email!";
-    } else {
-      const emailRegex = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
-      if (!emailRegex.test(formData.email)) {
-        errors.email = "Invalid email format!";
-      }
+    if (!formData.otp || formData.password.trim() === "") {
+      errors.password = "Please enter otp!";
     }
-
     if (!formData.password || formData.password.trim() === "") {
       errors.password = "Please enter password!";
     }
@@ -33,55 +29,46 @@ export default function SendOtp() {
 
   const handlechange = (e) => {
     const { name, value } = e.target;
-    // console.log(name, value)
-
     setFormData({
       ...formData,
       [name]: value,
     });
+    console.log(typeof formData.otp);
+    
   };
 
-  const handlesubmit = async (e) => {
-    try {
-      e.preventDefault();
-      if (!validate()) return;
-      const response = await axios.post(
-        "http://localhost:8000/auth/login",
-        formData,
-        {
-          withCredentials: true,
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      // console.log(response.data.accessToken);
-      localStorage.setItem("accessToken", response.data.accessToken);
-      if (response.status === 200) navigate("/");
-    } catch (error) {
-      if (error?.status === 401) setError({ login: "Wrong email or password" });
-      console.log("error while login in user", error.status);
-    }
-  };
-
-  const [email, setEmail] = useState("");
-  const [loading, setLoading] = useState(false);
-
-  const sendEmail = async () => {
+  const sendOTPmail = async (e) => {
+    e.preventDefault();
     if (!email) {
       toast.error("Please enter a valid email address.");
       return;
     }
     try {
       const response = await axiosInstance.post("/auth/sendOtp", { email });
-      setEmail("");
+      console.log("otpApi response:", response);
       if (response.status === 200) {
         toast("OTP sent successfully! Check your email.");
-        navigate("/login");
       }
     } catch (error) {
       console.log("error in sendEmail:", error);
       toast.error("Failed to send OTP. Please try again later.");
+    }
+  };
+  const resetPassword = async (e) => {
+    e.preventDefault();
+    if (!validate()) return;
+    console.log("hello");
+    if (!email) return;
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_BASE_URL}/auth/forgotPassword`,
+        { email, otp: formData.otp, newPassword: formData.password }
+      );
+      toast("password change successfully!");
+      navigate("/login");
+    } catch (error) {
+      toast("Wrong otp!");
+      console.log("error in forgotPassword:", error);
     }
   };
 
@@ -89,61 +76,66 @@ export default function SendOtp() {
     <div className="h-screen w-full flex justify-center items-center bg-linear-to-r from-blue-200 to-white">
       {/* <img src={login} alt="" className='w-auto h-screem'/> */}
       <div className="shadow-2xl p-12 rounded-3xl" style={{ width: "400px" }}>
-        <form action="" onSubmit={handlesubmit} noValidate>
+        <form action="" onSubmit={sendOTPmail} noValidate>
           <input
             type="email"
             className="border my-2 border-gray-500 rounded  p-2 bg-transparent w-full"
             placeholder="Enter email address"
             name="email"
+            value={email}
             onChange={(e) => {
               setEmail(e.target.value);
             }}
           />
-          {/* <p className="text-red-500 text-sm">{error?.email}</p> */}
           <button
             className={`mt-5 mb-2 border rounded px-4 py-2 font-bold text-white text-xl w-full ${
               email ? "bg-blue-500" : "bg-blue-400"
             }`}
-            onClick={sendEmail}
+            onClick={sendOTPmail}
             disabled={!email}
           >
             Generate OTP
           </button>
+        </form>
 
-          {/* <input
-            type="Password"
+        <form action="" onSubmit={resetPassword} noValidate>
+          <input
+            type="number"
             className="border my-2 border-gray-500 rounded  p-2 bg-transparent w-full"
-            placeholder="Enter password"
-            name="password"
+            placeholder="Enter OTP"
+            name="otp"
+            value={formData.otp}
             onChange={(e) => {
               handlechange(e);
             }}
           />
+          <p className="text-red-500 text-sm">{error?.otp}</p>
           <input
             type="Password"
             className="border my-2 border-gray-500 rounded  p-2 bg-transparent w-full"
-            placeholder="Enter confirm password"
+            placeholder="Enter new password"
             name="password"
+            value={formData.password}
             onChange={(e) => {
               handlechange(e);
             }}
           />
-          <p className="text-red-500 text-sm">{error?.password}</p>
-          <p className=" text-red-500 text-center font-bold">{error?.login}</p>
+          <p className=" text-red-500 text-center font-bold">
+            {error?.password}
+          </p>
 
           <div className="text-center">
             <button
-              className="mt-5 mb-2 border rounded bg-blue-500 px-4 py-2 font-bold text-white text-xl w-full"
-              type="submit"
+              className={`mt-5 mb-2 border rounded px-4 py-2 font-bold text-white text-xl w-full ${
+                formData.otp && formData.password
+                  ? "bg-blue-500"
+                  : "bg-blue-400"
+              }`}
+              onClick={resetPassword}
             >
               Reset Password
             </button>
-          </div> */}
-          {/* <small className="font-bold text-gray-400">
-            Back to <Link to="/login" className="text-blue-500 font-bold underline">
-              Login!
-            </Link>
-          </small> */}
+          </div>
         </form>
       </div>
     </div>

@@ -6,6 +6,7 @@ import { connectDb } from "./utils/connection.js";
 import cookieParser from "cookie-parser";
 import userRouter from "./routers/user.routes.js";
 import authRouter from "./routers/auth.routes.js";
+import {swaggerSpec, swaggerUi} from "./utils/swagger.js";
 
 const app = express();
 const PORT = 8000;
@@ -20,6 +21,8 @@ app.use(
     credentials: true,
   })
 );
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+// routes
 app.use("/auth", authRouter);
 app.use("/user", userRouter);
 

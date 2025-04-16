@@ -3,7 +3,7 @@ import Register from "../pages/Register";
 import Login from "../pages/Login";
 import Dashboard from "../pages/Dashboard";
 import Auth from "../components/Auth";
-import ForgotPassword from "../pages/SendOtp";
+import ForgotPassword from "../pages/ForgotPassword";
 import ResetPassword from "../pages/ResetPassword";
 
 export default function Router() {
@@ -31,7 +31,7 @@ export default function Router() {
       element: <ForgotPassword />,
     },
     {
-      path: "/ResetPassword/:id",
+      path: "/ResetPassword",
       element: <ResetPassword />,
     },
   ]);

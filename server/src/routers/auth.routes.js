@@ -1,6 +1,5 @@
 import express from "express";
 import {
-  userRegister,
   userLogin,
   resetPassword,
   sendOtp,
@@ -11,12 +10,10 @@ import { authenticateUser } from "../middlewares/auth.middleware.js";
 
 const authRouter = express.Router();
 
-authRouter.route("/register").post(userRegister);
 authRouter.route("/login").post(userLogin);
-authRouter.route("/refreshAccessToken").post(refreshAccessToken);
-
-authRouter.route("/resetPassword").post(authenticateUser, resetPassword);
+authRouter.route("/refreshAccessToken").get(refreshAccessToken);
+authRouter.route("/resetPassword").patch(authenticateUser, resetPassword);
+authRouter.route("/forgotPassword").patch(forgotPassword);
 authRouter.route("/sendOtp").post(sendOtp);
-authRouter.route("/forgotPassword").post(forgotPassword);
 
 export default authRouter;
