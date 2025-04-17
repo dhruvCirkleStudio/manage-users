@@ -36,9 +36,17 @@ const forgotPasswordRouteDoc = {
             schema: {
               type: "object",
               properties: {
+                status:{
+                  type: "Boolean",
+                  example: true,
+                },
                 message: {
                   type: "string",
                   example: "Password forgot successfully",
+                },
+                data: {
+                  type: "Object",
+                  example: null,
                 },
               },
             },
@@ -52,9 +60,17 @@ const forgotPasswordRouteDoc = {
             schema: {
               type: "object",
               properties: {
+                status:{
+                  type: "Boolean",
+                  example: false,
+                },
                 message: {
                   type: "string",
                   example: "otp expired!",
+                },
+                data: {
+                  type: "Object",
+                  example: null,
                 },
               },
             },
@@ -68,9 +84,17 @@ const forgotPasswordRouteDoc = {
             schema: {
               type: "object",
               properties: {
+                status:{
+                  type: "Boolean",
+                  example: false,
+                },
                 message: {
                   type: "string",
                   example: "Invalid OTP.",
+                },
+                data: {
+                  type: "Object",
+                  example: null,
                 },
               },
             },
@@ -84,9 +108,17 @@ const forgotPasswordRouteDoc = {
             schema: {
               type: "object",
               properties: {
+                status:{
+                  type: "Boolean",
+                  example: false,
+                },
                 message: {
                   type: "string",
                   example: "User not found.",
+                },
+                data: {
+                  type: "Object",
+                  example: null,
                 },
               },
             },
@@ -100,9 +132,17 @@ const forgotPasswordRouteDoc = {
             schema: {
               type: "object",
               properties: {
+                status:{
+                  type: "Boolean",
+                  example: false,
+                },
                 message: {
                   type: "string",
                   example: "Faild to forget Password!",
+                },
+                data: {
+                  type: "Object",
+                  example: null,
                 },
               },
             },

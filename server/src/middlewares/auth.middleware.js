@@ -13,7 +13,7 @@ export const authenticateUser = async(req, res, next) => {
     req.user = decoded;
     next();
   } catch (error) {
-    console.log("Authentication error", error);
+    console.log("Authentication error ::", error);
     if (error instanceof jwt.JsonWebTokenError) {
       // console.log('jsonwebtokenerror ::',error, 'jwt.JsonWebTokenError',jwt.JsonWebTokenError);
       if (error.name === "TokenExpiredError") {

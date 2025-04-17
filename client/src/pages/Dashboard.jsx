@@ -1,27 +1,57 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import axiosInstance from "../utils/axiosInstance";
 import { useNavigate } from "react-router";
+import ResetPasswordModel from "../components/ResetPasswordModel";
+import { toast } from "react-toastify";
+
+import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
+import { ChevronDownIcon } from "@heroicons/react/20/solid";
 
 const Dashboard = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("dashboard");
   const [users, setUsers] = useState([]);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
-  const getAllUsers = async () => {
-    try {
-      const response = await axiosInstance.get("/user");
-      setUsers(response?.data?.users);
-    } catch (error) {
-      console.error("error in getAllUser :", error);
-    }
-  };
+  const getAllUsers = useCallback(
+    async () => {
+        try {
+          const response = await axiosInstance.get("/user");
+          // console.log(response?.data?.data);
+          setUsers(response?.data?.data);
+        } catch (error) {
+          console.error("error in getAllUser :", error);
+          toast("Error while getting users data!");
+        }
+      },
+    [],
+  )
+
   useEffect(() => {
     getAllUsers();
   }, []);
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [passwords, setPasswords] = useState({
+    oldPassword: "",
+    newPassword: "",
+  });
+  const handleResetPassword = async () => {
+    try {
+      console.log("in the handleresetPassword");
+      const response = await axiosInstance.patch("/auth/resetPassword", {
+        ...passwords,
+      });
+      toast("password changed!");
+      setIsModalOpen(false);
+    } catch (error) {
+      console.log("error in resetPassword :", error);
+      toast(error?.response?.data?.message);
+    }
+  };
+
   return (
     <div className="flex h-screen bg-gray-50">
+
       {/* Static sidebar for desktop */}
       <div className="hidden md:flex md:flex-shrink-0">
         <div className="flex flex-col w-64 border-r border-gray-200 bg-white">
@@ -38,7 +68,7 @@ const Dashboard = () => {
                     : "text-gray-600 hover:bg-gray-100"
                 }`}
               >
-                <span className="ml-3">Dashboard</span>
+                <span className="ml-3">User Management</span>
               </button>
               <button
                 onClick={() => setActiveTab("analytics")}
@@ -59,40 +89,69 @@ const Dashboard = () => {
       <div className="flex flex-col flex-1 overflow-hidden">
         {/* Top navigation */}
         <div className="flex items-center justify-between h-16 px-4 border-b border-gray-200 bg-white">
-          <button
-            onClick={() => setSidebarOpen(true)}
-            className="text-gray-500 md:hidden"
-          >
-            {/* <MenuIcon /> */}
-          </button>
-          <div className="flex-1 max-w-2xl mx-auto">
+          <div className="flex-1 max-w-2xl">
             <div className="relative">
               <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"></div>
-              <input
-                type="text"
-                className="block w-full py-2 pl-10 pr-3 text-sm bg-gray-100 border border-transparent rounded-md focus:outline-none focus:bg-white focus:border-indigo-500"
-                placeholder="Search..."
-              />
+              <h1 className="text-2xl font-bold text-gray-800">
+                User Management
+              </h1>
             </div>
           </div>
-          <div className="flex items-center ml-4 space-x-4">
-            <button className="p-1 text-gray-400 rounded-full hover:text-gray-500 focus:outline-none"></button>
-            <div className="flex items-center">
-              <div className="w-8 h-8 overflow-hidden rounded-full bg-indigo-100">
-                <div className="flex items-center justify-center w-full h-full text-indigo-600">
-                  <span className="text-sm font-medium">AD</span>
-                </div>
+
+          {/* DROPDOWN MENU ACCOUNT SETTING */}
+          <Menu as="div" className="relative inline-block text-left">
+            <div>
+              <MenuButton className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs ring-1 ring-gray-300 ring-inset hover:bg-gray-50">
+                Account setting
+                <ChevronDownIcon
+                  aria-hidden="true"
+                  className="-mr-1 size-5 text-gray-400"
+                />
+              </MenuButton>
+            </div>
+
+            <MenuItems
+              transition
+              className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black/5 transition focus:outline-hidden data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in"
+            >
+              <div className="py-1">
+                <MenuItem>
+                  <a
+                    href="#"
+                    className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:text-gray-900 data-focus:outline-hidden"
+                    onClick={() => {
+                      setIsModalOpen(!isModalOpen);
+                    }}
+                  >
+                    Reset Password
+                  </a>
+                </MenuItem>
+                <MenuItem>
+                  <a
+                    href="#"
+                    className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:text-gray-900 data-focus:outline-hidden"
+                  >
+                    Forgot Password
+                  </a>
+                </MenuItem>
+                <form action="#" method="POST">
+                  <MenuItem>
+                    <button
+                      type="submit"
+                      className="block w-full px-4 py-2 text-left text-sm text-gray-700 data-focus:bg-gray-100 data-focus:text-gray-900 data-focus:outline-hidden"
+                    >
+                      Sign out
+                    </button>
+                  </MenuItem>
+                </form>
               </div>
-            </div>
-          </div>
+            </MenuItems>
+          </Menu>
         </div>
 
         {/* Main content area */}
         <div className="flex-1 overflow-auto p-4">
           <div className="mb-6">
-            <h1 className="text-2xl font-bold text-gray-800">
-              User Management
-            </h1>
             <p className="text-gray-600">
               Manage your users and their permissions
             </p>
@@ -223,6 +282,16 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
+      <ResetPasswordModel
+        isOpen={isModalOpen}
+        onClose={() => {
+          setIsModalOpen(false),
+            setPasswords({ newPassword: "", oldPassword: "" });
+        }}
+        resetPassword={handleResetPassword}
+        passwords={passwords}
+        setPasswords={setPasswords}
+      />
     </div>
   );
 };

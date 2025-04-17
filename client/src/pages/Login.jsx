@@ -53,8 +53,7 @@ export default function Login() {
           },
         }
       );
-      // console.log(response.data.accessToken);
-      localStorage.setItem("accessToken", response.data.accessToken);
+      localStorage.setItem("accessToken", response.data.data.accessToken);
       if (response.status === 200) navigate("/");
     } catch (error) {
       if (error?.status === 401) setError({ login: "Wrong email or password" });
@@ -99,15 +98,17 @@ export default function Login() {
             </button>
             <br />
           </div>
-          <small className="font-bold text-gray-400">
+          {/* <small className="font-bold text-gray-400">
             Already Have Account?{" "}
             <Link to="/Register" className="text-blue-500 font-bold underline">
               Register!
             </Link>
-          </small>
-          <br />
+          </small> */}
           <small className="font-bold text-gray-400">
-            <Link to="/ForgotPassword" className="text-blue-500 font-bold underline">
+            <Link
+              to="/ForgotPassword"
+              className="text-blue-500 font-bold underline"
+            >
               Forgot Password!
             </Link>
           </small>

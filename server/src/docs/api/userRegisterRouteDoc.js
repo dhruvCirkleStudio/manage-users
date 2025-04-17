@@ -49,9 +49,17 @@ export const userRegister = {
             schema: {
               type: "object",
               properties: {
+                status:{
+                  type: "Boolean",
+                  example: true,
+                },
                 message: {
                   type: "string",
                   example: "user added successfully!",
+                },
+                data: {
+                  type: "Object",
+                  example: null,
                 },
               },
             },
@@ -65,9 +73,17 @@ export const userRegister = {
             schema: {
               type: "object",
               properties: {
+                status:{
+                  type: "Boolean",
+                  example: false,
+                },
                 message: {
                   type: "string",
                   example: "Credentials are missing!",
+                },
+                data: {
+                  type: "Object",
+                  example: null,
                 },
               },
             },
@@ -81,7 +97,18 @@ export const userRegister = {
             schema: {
               type: "object",
               properties: {
-                message: { type: "string", example: "email already exists!" },
+                status:{
+                  type: "Boolean",
+                  example: false,
+                },
+                message: {
+                  type: "string",
+                  example: "email already exists!",
+                },
+                data: {
+                  type: "Object",
+                  example: null,
+                },
               },
             },
           },
@@ -94,9 +121,17 @@ export const userRegister = {
             schema: {
               type: "object",
               properties: {
-                error: {
+                status:{
+                  type: "Boolean",
+                  example: false,
+                },
+                message: {
                   type: "string",
                   example: "An error occurred while registering User!",
+                },
+                data: {
+                  type: "Object",
+                  example: null,
                 },
               },
             },

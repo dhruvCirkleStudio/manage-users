@@ -18,10 +18,10 @@ export default function Router() {
         },
       ],
     },
-    {
-      path: "/Register",
-      element: <Register />,
-    },
+    // {
+    //   path: "/Register",
+    //   element: <Register />,
+    // },
     {
       path: "/Login",
       element: <Login />,

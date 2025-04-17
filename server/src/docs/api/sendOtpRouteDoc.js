@@ -28,9 +28,17 @@ const sendOtpRouteDoc = {
             schema: {
               type: "object",
               properties: {
+                status:{
+                  type: "Boolean",
+                  example: true,
+                },
                 message: {
                   type: "string",
                   example: "otp send successfull :",
+                },
+                data: {
+                  type: "Object",
+                  example: null,
                 },
               },
             },
@@ -44,9 +52,17 @@ const sendOtpRouteDoc = {
             schema: {
               type: "object",
               properties: {
+                status:{
+                  type: "Boolean",
+                  example: false,
+                },
                 message: {
                   type: "string",
                   example: "email is required!",
+                },
+                data: {
+                  type: "Object",
+                  example: null,
                 },
               },
             },
@@ -60,9 +76,17 @@ const sendOtpRouteDoc = {
             schema: {
               type: "object",
               properties: {
+                status:{
+                  type: "Boolean",
+                  example: false,
+                },
                 message: {
                   type: "string",
                   example: "User does not exist!",
+                },
+                data: {
+                  type: "Object",
+                  example: null,
                 },
               },
             },
@@ -76,9 +100,17 @@ const sendOtpRouteDoc = {
             schema: {
               type: "object",
               properties: {
+                status:{
+                  type: "Boolean",
+                  example: false,
+                },
                 message: {
                   type: "string",
                   example: "error occured while sending otp!",
+                },
+                data: {
+                  type: "Object",
+                  example: null,
                 },
               },
             },

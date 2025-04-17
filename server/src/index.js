@@ -26,6 +26,6 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use("/auth", authRouter);
 app.use("/user", userRouter);
 
-app.listen(PORT, () => {
+app.listen(PORT,'0.0.0.0',() => {
   console.log("server is listing on port:", PORT);
 });

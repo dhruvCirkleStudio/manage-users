@@ -11,7 +11,7 @@ import { authenticateUser } from "../middlewares/auth.middleware.js";
 const authRouter = express.Router();
 
 authRouter.route("/login").post(userLogin);
-authRouter.route("/refreshAccessToken").get(refreshAccessToken);
+authRouter.route("/refreshAccessToken").post(refreshAccessToken);
 authRouter.route("/resetPassword").patch(authenticateUser, resetPassword);
 authRouter.route("/forgotPassword").patch(forgotPassword);
 authRouter.route("/sendOtp").post(sendOtp);

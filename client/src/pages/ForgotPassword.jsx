@@ -57,10 +57,9 @@ export default function ForgotPassword() {
   const resetPassword = async (e) => {
     e.preventDefault();
     if (!validate()) return;
-    console.log("hello");
     if (!email) return;
     try {
-      const response = await axios.post(
+      const response = await axios.patch(
         `${import.meta.env.VITE_API_BASE_URL}/auth/forgotPassword`,
         { email, otp: formData.otp, newPassword: formData.password }
       );

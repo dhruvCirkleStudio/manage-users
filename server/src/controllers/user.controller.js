@@ -1,16 +1,21 @@
 import { User } from "../models/user.model.js";
 import bcrypt from "bcryptjs";
+import { apiResponse, errorResponse } from "../utils/response.js";
 
 const saltRounds = 12;
 
-export const getAllUsers = async(req, res) => {
-    try {
-        const users = await User.find({});
-        res.status(200).json({message:'success',users})
-    } catch (error) {
-        console.log('error in getting all user:',error)
-        res.status(500).json({message:'something went wrong!'})
-    }
+export const getAllUsers = async (req, res) => {
+  try {
+    const users = await User.find({});
+    return apiResponse(res, 200, {
+      status:true,
+      message: "success",
+      data: users,
+    }); 
+  } catch (error) {
+    console.log("error in getting all user:", error);
+    errorResponse(res, 500, { message: "something went wrong!" });
+  }
 };
 
 export const userRegister = async (req, res) => {
@@ -25,14 +30,14 @@ export const userRegister = async (req, res) => {
       !userType ||
       !deviceType
     ) {
-      return res.status(400).json({ error: "some fields are missing!" });
+      return errorResponse(res, 400, { error: "some fields are missing!" });
     }
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.status(401).json({ message: "email already exists" });
+      return errorResponse(res, 401, { message: "email already exists" });
     }
-    
+
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
     const response = await User.insertOne({
@@ -45,12 +50,13 @@ export const userRegister = async (req, res) => {
       // token: refreshToken,
     });
 
-    return res.status(200).json({ status: "user added successfully!" });
+    return apiResponse(res, 200, {
+      status:true,
+      message: "user added successfully!",
+      data: null,
+    });
   } catch (error) {
     console.log("error in creating user:", error);
-    return res
-      .status(500)
-      .json({ error: "An error occurred while creating new User!" });
+    return errorResponse(res,500,{ message: "An error occurred while creating new User!" });
   }
 };
-

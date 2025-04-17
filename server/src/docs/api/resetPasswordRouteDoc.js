@@ -36,9 +36,17 @@ const resetPasswordDoc = {
             schema: {
               type: "object",
               properties: {
+                status:{
+                  type: "Boolean",
+                  example: true,
+                },
                 message: {
                   type: "string",
                   example: "password changed!",
+                },
+                data: {
+                  type: "Object",
+                  example: null,
                 },
               },
             },
@@ -52,9 +60,17 @@ const resetPasswordDoc = {
             schema: {
               type: "object",
               properties: {
+                status:{
+                  type: "Boolean",
+                  example: false,
+                },
                 message: {
                   type: "string",
                   example: "credentials are missing!",
+                },
+                data: {
+                  type: "Object",
+                  example: null,
                 },
               },
             },
@@ -68,9 +84,17 @@ const resetPasswordDoc = {
             schema: {
               type: "object",
               properties: {
+                status:{
+                  type: "Boolean",
+                  example: false,
+                },
                 message: {
                   type: "string",
                   example: "Entered wrong password!",
+                },
+                data: {
+                  type: "Object",
+                  example: null,
                 },
               },
             },
@@ -84,9 +108,17 @@ const resetPasswordDoc = {
             schema: {
               type: "object",
               properties: {
+                status:{
+                  type: "Boolean",
+                  example: false,
+                },
                 message: {
                   type: "string",
                   example: "User not found",
+                },
+                data: {
+                  type: "Object",
+                  example: null,
                 },
               },
             },
@@ -100,9 +132,17 @@ const resetPasswordDoc = {
             schema: {
               type: "object",
               properties: {
+                status:{
+                  type: "Boolean",
+                  example: false,
+                },
                 message: {
                   type: "string",
                   example: "something went wrong!",
+                },
+                data: {
+                  type: "Object",
+                  example: null,
                 },
               },
             },

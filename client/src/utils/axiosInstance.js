@@ -1,14 +1,11 @@
 import axios from "axios";
 import { navigate } from "./useNavigateHook";
 
-const accessToken = localStorage.getItem("accessToken");
+// const accessToken = localStorage.getItem("accessToken");
 
 const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
   withCredentials: true,
-  // headers: {
-  //   Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-  // },
 });
 
 axiosInstance.interceptors.request.use(
@@ -31,8 +28,12 @@ const refreshAccessToken = async () => {
         withCredentials: true,
       }
     );
-    return response.data.accessToken;
+    // console.log(response);
+    return response.data.data.accessToken;
   } catch (error) {
+    if(error?.status === 401){
+      navigate("/Login");
+    }
     console.error("Failed to refresh token, logging out...", error);
     return null;
   }

@@ -16,46 +16,55 @@ export const getAllUsersRouteDoc = {
             schema: {
               type: "object",
               properties: {
+                status:{
+                  type: "Boolean",
+                  example: true,
+                },
                 message: {
                   type: "string",
                   example: "success",
                 },
-                users: {
-                  type: "array",
-                  items: {
-                    _id: {
-                      type: "string",
-                      example: "67fdfc767ae0280ff12e1d94",
-                    },
-                    userName: { type: "string", example: "dhruv" },
-                    email: {
-                      type: "stirng",
-                      example: "dhruv01@gmail.com",
-                    },
-                    gender: {
-                      type: "stirng",
-                      example: "male",
-                    },
-                    userType: {
-                      type: "stirng",
-                      example: "guest",
-                    },
-                    deviceType: {
-                      type: "stirng",
-                      example: "pc",
-                    },
-                    createdAt: {
-                      type: "stirng",
-                      example: "2025-04-15T06:28:06.959Z",
-                    },
-                    updatedAt: {
-                      type: "stirng",
-                      example: "2025-04-16T10:32:16.732Z",
-                    },
-                    __v: { type: "number", example: 0 },
-                    token: {
-                      type: "string",
-                      example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+                data: {
+                  type: "object",
+                  properties: {
+                    users: {
+                      type: "array",
+                      items: {
+                        _id: {
+                          type: "string",
+                          example: "67fdfc767ae0280ff12e1d94",
+                        },
+                        userName: { type: "string", example: "dhruv" },
+                        email: {
+                          type: "stirng",
+                          example: "dhruv01@gmail.com",
+                        },
+                        gender: {
+                          type: "stirng",
+                          example: "male",
+                        },
+                        userType: {
+                          type: "stirng",
+                          example: "guest",
+                        },
+                        deviceType: {
+                          type: "stirng",
+                          example: "pc",
+                        },
+                        createdAt: {
+                          type: "stirng",
+                          example: "2025-04-15T06:28:06.959Z",
+                        },
+                        updatedAt: {
+                          type: "stirng",
+                          example: "2025-04-16T10:32:16.732Z",
+                        },
+                        __v: { type: "number", example: 0 },
+                        token: {
+                          type: "string",
+                          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+                        },
+                      },
                     },
                   },
                 },
@@ -71,9 +80,17 @@ export const getAllUsersRouteDoc = {
             schema: {
               type: "object",
               properties: {
+                status:{
+                  type: "Boolean",
+                  example: false,
+                },
                 message: {
                   type: "string",
                   example: "something went wrong!",
+                },
+                data: {
+                  type: "Object",
+                  example: null,
                 },
               },
             },
