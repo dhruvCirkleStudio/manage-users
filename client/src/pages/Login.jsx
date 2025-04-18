@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router";
 import axios from "axios";
+import { emailRegex } from "../shared/constants";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -16,7 +17,6 @@ export default function Login() {
     if (typeof formData.email !== "string" || formData.email.trim() === "") {
       errors.email = "Please enter email!";
     } else {
-      const emailRegex = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
       if (!emailRegex.test(formData.email)) {
         errors.email = "Invalid email format!";
       }

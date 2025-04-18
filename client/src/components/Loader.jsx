@@ -1,10 +1,9 @@
+import { Box, CircularProgress } from "@mui/material";
+
 export default function Loader() {
   return (
-    <div className="h-screen w-screen absolute top-0 left-0 flex items-center justify-center">
-      <div className="text-center">
-        <span className="loader"></span>
-        <p>Please wait!</p>
-      </div>
-    </div>
+    <Box sx={{ display: 'flex',height:'100%',width:'100%' }}>
+      <CircularProgress />
+    </Box>
   );
 }
