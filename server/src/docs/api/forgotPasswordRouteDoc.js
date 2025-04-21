@@ -16,8 +16,8 @@ const forgotPasswordRouteDoc = {
                 example: "dhruv01@gmail.com",
               },
               otp: {
-                type: "integer",
-                example: 123456,
+                type: "stirng",
+                example: "123456",
               },
               newPassword: {
                 type: "string",

@@ -2,7 +2,7 @@ import { User } from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import { apiResponse, errorResponse } from "../utils/response.js";
 
-const saltRounds = 12;
+const saltRounds = Number(process.env.SALTROUNDS);
 
 export const getAllUsers = async (req, res) => {
   try {
@@ -39,7 +39,6 @@ export const userRegister = async (req, res) => {
     if (existingUser) {
       return errorResponse(res, 401, { message: "email already exists" });
     }
-
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
     const response = await User.insertOne({
@@ -109,7 +108,7 @@ export const deleteUser = async (req, res) => {
     if (!id) {
       return errorResponse(res, 400, {
         status: false,
-        message: "invalid credentias!",
+        message: "invalid credentias!", 
         data: null,
       });
     }

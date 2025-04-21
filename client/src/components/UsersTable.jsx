@@ -13,7 +13,7 @@ import {
   Chip,
   IconButton,
   Box,
-  InputAdornment,
+  // InputAdornment,
   Typography,
 } from "@mui/material";
 import {
@@ -26,7 +26,7 @@ import CreateUserModel from "./CreateUserModel";
 import UpdateUserModel from "./UpdateUserModel";
 import axiosInstance from "../utils/axiosInstance";
 import { toast } from "react-toastify";
-import Loader from "./Loader";
+// import Loader from "./Loader";
 
 const UsersTable = memo(() => {
   const [createUserModel, setCreateUserModel] = useState(false);
@@ -34,7 +34,7 @@ const UsersTable = memo(() => {
   const [formData, setFormData] = useState({});
   const [users, setUsers] = useState([]);
 
-  const getAllUsers = useCallback(async () => {
+  const getAllUsers = async () => {
     try {
       const response = await axiosInstance.get("/user");
       // console.log(response.data);
@@ -44,7 +44,7 @@ const UsersTable = memo(() => {
       console.error("error in getAllUser :", error);
       toast("Error while getting users data!");
     }
-  }, []);
+  };
 
   const deleteUser = useCallback(async (id) => {
     try {

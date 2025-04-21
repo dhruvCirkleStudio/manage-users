@@ -1,5 +1,5 @@
 export const userUpdateData = {
-    post: {
+    patch: {
       tags: ["Users"],
       description: "User data update!",
       requestBody: {

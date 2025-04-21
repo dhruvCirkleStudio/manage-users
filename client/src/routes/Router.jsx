@@ -4,7 +4,6 @@ import Login from "../pages/Login";
 import Dashboard from "../pages/Dashboard";
 import Auth from "../components/Auth";
 import ForgotPassword from "../pages/ForgotPassword";
-import ResetPassword from "../pages/ResetPassword";
 
 export default function Router() {
   const routingArr = createBrowserRouter([
@@ -29,10 +28,6 @@ export default function Router() {
     {
       path: "/ForgotPassword",
       element: <ForgotPassword />,
-    },
-    {
-      path: "/ResetPassword",
-      element: <ResetPassword />,
     },
   ]);
 

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import axiosInstance from "../utils/axiosInstance";
 import { useNavigate } from "react-router";
 import ResetPasswordModel from "../components/ResetPasswordModel";
@@ -14,11 +14,9 @@ import {
   AppBar,
   Toolbar,
   Typography,
-  TextField,
   Button,
   Menu,
   MenuItem,
-  IconButton,
   Paper,
 } from "@mui/material";
 import {
@@ -52,7 +50,7 @@ const Dashboard = () => {
     setAnchorEl(null);
   };
 
-  const handleResetPassword = async () => {
+  const handleResetPassword = useCallback(async () => {
     try {
       console.log("in the handleresetPassword");
       const response = await axiosInstance.patch("/auth/resetPassword", {
@@ -69,7 +67,7 @@ const Dashboard = () => {
       console.log("error in resetPassword :", error);
       toast(error?.response?.data?.message);
     }
-  };
+  },[passwords]);
 
   return (
     <Box sx={{ display: "flex", height: "100vh" }}>

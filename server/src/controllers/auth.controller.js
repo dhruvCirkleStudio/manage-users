@@ -6,7 +6,7 @@ import nodemailer from "nodemailer";
 import crypto from "crypto";
 import { apiResponse, errorResponse } from "../utils/response.js";
 
-const saltRounds = 12;
+const saltRounds = Number(process.env.SALTROUNDS);
 
 export const userLogin = async (req, res) => {
   try {
@@ -70,7 +70,7 @@ export const userLogin = async (req, res) => {
 
 export const refreshAccessToken = async (req, res) => {
   try {
-    const refreshToken = req?.cookies?.refreshToken;
+    const refreshToken = req.cookies.refreshToken;
     if (!refreshToken) {
       return errorResponse(res, 400, { message: "token does not Provided!" });
     }
@@ -123,7 +123,7 @@ export const resetPassword = async (req, res) => {
   const { oldPassword, newPassword } = req.body;
   try {
     if (!oldPassword || !newPassword) {
-      return errorResponse(res, 400, { message: "credentials are missing!" });
+      return errorResponse(res, 400, { message: "passwords are missing!" });
     }
     if (oldPassword === newPassword) {
       return errorResponse(res, 400, {

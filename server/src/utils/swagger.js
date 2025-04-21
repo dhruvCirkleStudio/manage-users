@@ -47,7 +47,7 @@ const swaggerDefinition = {
     "/user/register": userRegister,
     "/user": getAllUsersRouteDoc,
     "/user/update":userUpdateData,
-    "/user/delete":deleteUserDoc
+    "/user/delete/{id}":deleteUserDoc
   },
 };
 const options = {
