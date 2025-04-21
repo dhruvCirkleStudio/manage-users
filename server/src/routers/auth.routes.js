@@ -4,7 +4,8 @@ import {
   resetPassword,
   sendOtp,
   refreshAccessToken,
-  forgotPassword
+  forgotPassword,
+  userLogout,
 } from "../controllers/auth.controller.js";
 import { authenticateUser } from "../middlewares/auth.middleware.js";
 
@@ -15,5 +16,6 @@ authRouter.route("/refreshAccessToken").post(refreshAccessToken);
 authRouter.route("/resetPassword").patch(authenticateUser, resetPassword);
 authRouter.route("/forgotPassword").patch(forgotPassword);
 authRouter.route("/sendOtp").post(sendOtp);
+authRouter.route("/logout").post(authenticateUser, userLogout);
 
 export default authRouter;

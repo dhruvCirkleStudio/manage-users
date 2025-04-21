@@ -1,8 +1,10 @@
-import { useCallback, useState } from "react";
+import React, { Suspense } from "react";
+import { useCallback, useEffect, useState } from "react";
 import axiosInstance from "../utils/axiosInstance";
 import { useNavigate } from "react-router";
 import ResetPasswordModel from "../components/ResetPasswordModel";
 import { toast } from "react-toastify";
+const UsersTable = React.lazy(() => import("../components/UsersTable"));
 
 import {
   Box,
@@ -20,16 +22,12 @@ import {
   Paper,
 } from "@mui/material";
 import {
-  ChevronRight as ChevronRightIcon,
   AccountCircle as AccountCircleIcon,
   Dashboard as DashboardIcon,
-  Analytics as AnalyticsIcon,
   KeyboardArrowDown as KeyboardArrowDownIcon,
 } from "@mui/icons-material";
-import UsersTable from "../components/UsersTable";
 
 const Dashboard = () => {
-  const [activeTab, setActiveTab] = useState("dashboard");
   const navigate = useNavigate();
 
   const [modelState, setModelState] = useState({
@@ -67,7 +65,18 @@ const Dashboard = () => {
       console.log("error in resetPassword :", error);
       toast(error?.response?.data?.message);
     }
-  },[passwords]);
+  }, [passwords]);
+
+  const handleLogOut = async () => {
+    try {
+      await axiosInstance.post("/auth/logout");
+      localStorage.removeItem("accessToken");
+      navigate("/Login");
+      toast("you have been logged out!");
+    } catch (error) {
+      console.log("error in logout function:", error);
+    }
+  };
 
   return (
     <Box sx={{ display: "flex", height: "100vh" }}>
@@ -90,21 +99,9 @@ const Dashboard = () => {
         </Toolbar>
         <List>
           <ListItem disablePadding>
-            <ListItemButton
-              selected={activeTab === "dashboard"}
-              onClick={() => setActiveTab("dashboard")}
-            >
+            <ListItemButton>
               <DashboardIcon sx={{ mr: 1 }} />
               <ListItemText primary="User Management" />
-            </ListItemButton>
-          </ListItem>
-          <ListItem disablePadding>
-            <ListItemButton
-              selected={activeTab === "analytics"}
-              onClick={() => setActiveTab("analytics")}
-            >
-              <AnalyticsIcon sx={{ mr: 1 }} />
-              <ListItemText primary="Analytics" />
             </ListItemButton>
           </ListItem>
         </List>
@@ -168,7 +165,14 @@ const Dashboard = () => {
                 >
                   Forgot Password
                 </MenuItem>
-                <MenuItem onClick={handleMenuClose}>Sign out</MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    handleLogOut();
+                    handleMenuClose();
+                  }}
+                >
+                  Sign out
+                </MenuItem>
               </Menu>
             </div>
           </Toolbar>
@@ -176,14 +180,10 @@ const Dashboard = () => {
 
         {/* Main content area */}
         <Box sx={{ p: 3 }}>
-          <Typography variant="body1" color="text.secondary" gutterBottom>
-            Manage your users and their permissions
-          </Typography>
-
           {/* User Table */}
-          <Paper sx={{ mt: 2 }}>
+          <Suspense fallback={<div>Loading users...</div>}>
             <UsersTable />
-          </Paper>
+          </Suspense>
         </Box>
       </Box>
 

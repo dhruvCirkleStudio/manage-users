@@ -68,6 +68,20 @@ export const userLogin = async (req, res) => {
   }
 };
 
+export const userLogout = async (req, res) => {
+  try {
+    // console.log(req.cookie.refershToken);
+    res.clearCookie("refreshToken");
+    return apiResponse(res, 200, {
+      status: true,
+      message: "user logout!",
+      data: null,
+    });
+  } catch (error) {
+    console.log("error in userLogout controller:", error);
+  }
+};
+
 export const refreshAccessToken = async (req, res) => {
   try {
     const refreshToken = req.cookies.refreshToken;

@@ -1,8 +1,6 @@
 import axios from "axios";
 import { navigate } from "./useNavigateHook";
 
-// const accessToken = localStorage.getItem("accessToken");
-
 const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
   withCredentials: true,
@@ -20,7 +18,7 @@ axiosInstance.interceptors.request.use(
 );
 
 const refreshAccessToken = async () => {
-  try {
+  try { 
     const response = await axios.post(
       `${import.meta.env.VITE_API_BASE_URL}/auth/refreshAccessToken`,
       {},
