@@ -21,12 +21,7 @@ import {
   MenuItem,
   Paper,
 } from "@mui/material";
-import {
-  AccountCircle as AccountCircleIcon,
-  Dashboard as DashboardIcon,
-  KeyboardArrowDown as KeyboardArrowDownIcon,
-} from "@mui/icons-material";
-
+import DashboardIcon from "@mui/icons-material/Dashboard";
 const Dashboard = () => {
   const navigate = useNavigate();
 
@@ -94,13 +89,14 @@ const Dashboard = () => {
       >
         <Toolbar sx={{ backgroundColor: "primary.main", color: "white" }}>
           <Typography variant="h6" component="div">
+            
             Dashboard
           </Typography>
         </Toolbar>
         <List>
           <ListItem disablePadding>
             <ListItemButton>
-              <DashboardIcon sx={{ mr: 1 }} />
+            <DashboardIcon sx={{ mr: 1 }}/>
               <ListItemText primary="User Management" />
             </ListItemButton>
           </ListItem>
@@ -135,8 +131,6 @@ const Dashboard = () => {
                 aria-haspopup="true"
                 aria-expanded={open ? "true" : undefined}
                 onClick={handleMenuClick}
-                endIcon={<KeyboardArrowDownIcon />}
-                startIcon={<AccountCircleIcon />}
               >
                 Account Settings
               </Button>

@@ -6,9 +6,9 @@ const saltRounds = Number(process.env.SALTROUNDS);
 
 export const getAllUsers = async (req, res) => {
   try {
-    const users = await User.find({}).select(
+    const users = await User.find({ userType: { $nin: ["admin"] } }).select(
       "_id email gender userName userType deviceType"
-    );
+    ).lean();
     return apiResponse(res, 200, {
       status: true,
       message: "success",
@@ -108,7 +108,7 @@ export const deleteUser = async (req, res) => {
     if (!id) {
       return errorResponse(res, 400, {
         status: false,
-        message: "invalid credentias!", 
+        message: "invalid credentias!",
         data: null,
       });
     }

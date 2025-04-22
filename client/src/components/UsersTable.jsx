@@ -11,16 +11,14 @@ import {
   Button,
   Avatar,
   Chip,
-  IconButton,
   Box,
   // InputAdornment,
   Typography,
+  Icon,
 } from "@mui/material";
-import {
-  Edit as EditIcon,
-  Delete as DeleteIcon,
-  PersonAdd as PersonAddIcon,
-} from "@mui/icons-material";
+import IconButton from "@mui/material/IconButton";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 import CreateUserModel from "./CreateUserModel";
 import UpdateUserModel from "./UpdateUserModel";
 import axiosInstance from "../utils/axiosInstance";
@@ -37,7 +35,7 @@ const UsersTable = memo(() => {
     try {
       // console.log(user);
       const response = await axiosInstance.delete(`/user/delete/${id}`);
-      console.log(response.data);
+      // console.log(response.data);
       toast(response.message || "user deleted successfully!");
       getAllUsers();
     } catch (error) {
@@ -84,7 +82,6 @@ const UsersTable = memo(() => {
             />
             <Button
               variant="contained"
-              startIcon={<PersonAddIcon />}
               onClick={() => setCreateUserModel(true)}
             >
               Add User
@@ -142,20 +139,25 @@ const UsersTable = memo(() => {
                     </TableCell>
                     <TableCell>{user?.deviceType}</TableCell>
                     <TableCell align="right">
-                      <IconButton color="primary" aria-label="edit">
-                        <EditIcon
-                          onClick={() => {
-                            setUpdateUserModel(true);
-                            setFormData({ ...user });
-                          }}
-                        />
+                     
+                      <IconButton
+                        onClick={() => {
+                          setUpdateUserModel(true);
+                          setFormData({ ...user });
+                        }}
+                        color="primary"
+                        aria-label="edit user"
+                      >
+                        <EditIcon />
                       </IconButton>
-                      <IconButton color="error" aria-label="delete">
-                        <DeleteIcon
-                          onClick={() => {
-                            deleteUser(user._id);
-                          }}
-                        />
+                      <IconButton
+                         onClick={() => {
+                          deleteUser(user._id);
+                        }}
+                        color="error"
+                        aria-label="delete user"
+                      >
+                        <DeleteIcon />
                       </IconButton>
                     </TableCell>
                   </TableRow>

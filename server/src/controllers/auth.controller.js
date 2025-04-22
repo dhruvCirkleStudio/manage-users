@@ -53,7 +53,7 @@ export const userLogin = async (req, res) => {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
-      maxAge: 2 * 24 * 60 * 60 * 1000, // 2day
+      maxAge: Number(process.env.REFRESH_TOKEN_EXPIRY.split('')[0]) * 24 * 60 * 60 * 1000,
     });
     return apiResponse(res, 200, {
       status: true,
