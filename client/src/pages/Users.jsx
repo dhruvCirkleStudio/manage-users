@@ -26,7 +26,7 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import FolderOpenIcon from "@mui/icons-material/FolderOpen";
 import Sidebar from "../components/Sidebar";
 
-const Dashboard = () => {
+const Users = () => {
   const navigate = useNavigate();
 
   const [modelState, setModelState] = useState({
@@ -79,6 +79,7 @@ const Dashboard = () => {
 
   return (
     <Box sx={{ display: "flex", height: "100vh" }}>
+        
       {/* Sidebar */}
       <Sidebar/>
 
@@ -179,4 +180,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default Users;

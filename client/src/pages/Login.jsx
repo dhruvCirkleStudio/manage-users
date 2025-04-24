@@ -55,7 +55,7 @@ export default function Login() {
         }
       );
       localStorage.setItem("accessToken", response.data.data.accessToken);
-      if (response.status === 200) navigate("/");
+      if (response.status === 200) navigate("/Users");
     } catch (error) {
       if (error?.status === 401) setError({ login: "Wrong email or password" });
       console.log("error while login in user", error.status);

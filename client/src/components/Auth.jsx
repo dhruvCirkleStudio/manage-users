@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { Outlet, useNavigate } from "react-router";
 import axiosInstance from "../utils/axiosInstance";
+import { setNavigate } from "../utils/useNavigateHook";
 
 export default function Auth() {
   const navigate = useNavigate();
@@ -13,23 +14,27 @@ export default function Auth() {
         { withCredentials: true }
       );
       console.log(response);
+      navigate("/users");
       localStorage.setItem("accessToken", response.data.data.accessToken);
-      console.log("hello from dashboard");
     } catch (error) {
       console.log("error in the checkauthentication:", error);
       toast("error verifying user!");
-      navigate("/login");
+      navigate("/Login");
     }
   };
 
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
     if (!token) {
+      console.log("inside auth");
       checkAuthentication();
-      // console.log("token is not provided!");
-      // navigate("/login");
     }
+    // navigate("/users");
   }, []);
+
+  useEffect(() => {
+    setNavigate(navigate);
+  }, [navigate]);
 
   return <Outlet />;
 }
