@@ -3,21 +3,39 @@
   width: 80px;
 }
 
-.border{
+.border {
   border: 1px solid rgb(153, 153, 153);
   border-radius: 5px;
 }
 
-.pathItemList{
+.pathItemList {
   display: flex;
   font-weight: 600;
 }
-.pathItems{
+.pathItems {
   /* list-style: none;
   margin: 0px 0px 0px 0px;
   cursor: pointer; */
 }
-.pathItems:hover{
+.pathItems:hover {
   color: #1976d2;
   text-decoration: underline;
+}
+
+.filearea {
+  margin-top: 20px;
+  /* border: 2px solid red; */
+  /* background-color: rgb(232, 232, 243); */
+  background-color: rgb(232, 232, 243);
+  width: 100%;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.fileToolIcons {
+  color: "gray";
+  font-size: 30px;
+}
+.fileToolIcons:hover {
+  color: rgba(0, 0, 0, 0.849);
 }
