@@ -123,7 +123,7 @@ export const saveFile = async (req, res) => {
         const parsed = JSON.parse(data);
         updatedData = JSON.stringify(parsed, null, 2);
       } catch (error) {
-        errorResponse(res, 400, {
+        return errorResponse(res, 400, {
           message: "data ia not compatible json format!",
         });
       }
@@ -185,7 +185,7 @@ export const changeFileOrFolderName = async (req, res) => {
   try {
     // const { currentPath, newName } = req.body;
     const { oldPath, newPath } = req.body;
-
+    console.log(newPath);
     if (!oldPath || !newPath) {
       return apiResponse(res, 400, {
         status: false,
@@ -216,30 +216,11 @@ export const changeFileOrFolderName = async (req, res) => {
       message: "file or folder name change successfully!",
       data: null,
     });
-
-    // const oldPath = path.join(process.env.ROOT_FOLDER_PATH, currentPath);
-    // const newPath = path.join(process.env.ROOT_FOLDER_PATH, newName);
-    // const oldPathExtName = path.extname(oldPath);
-    // console.log(oldPath, newPath);
-
-    // if (oldPathExtName) {
-    //   console.log("file", oldPath);
-    // } else {
-    //   console.log("folder", oldPath);
-    // }
-
-    // const stats = await fs.stat(oldPath);
-    // if (stats.isFile()) {
-    //   fs.rename(oldPath, newPath);
-    // }
-    // if (stats.isDirectory()) {
-    //   await fs.rm(fullPath, { recursive: true, force: true });
-    // }
   } catch (error) {
     console.log("error in changeFileOrFolderName controller:", error);
     return apiResponse(res, 500, {
       status: false,
-      message: 'Something went wrong. Please try again later.',
+      message: "Something went wrong. Please try again later.",
       data: null,
     });
   }

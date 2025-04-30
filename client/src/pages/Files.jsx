@@ -1,21 +1,18 @@
 import React, { useEffect } from "react";
+import DashboardLayout, {
+  DashboardNavigation,
+  DashboardMainContent,
+} from "../components/DashboardLayout";
 import { useState } from "react";
 import axiosInstance from "../utils/axiosInstance";
-import { Link, useNavigate } from "react-router";
 import folderImage from "../assets/folder.svg";
 import fileImage from "../assets/file.svg";
-import Sidebar from "../components/Sidebar";
 import { toast } from "../utils/ToastNotification";
 import {
   Box,
-  AppBar,
   Toolbar,
   Typography,
   Button,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
   TextField,
   FormControl,
   InputLabel,
@@ -25,17 +22,17 @@ import {
   Paper,
   TextareaAutosize,
   Tooltip,
-  badgeClasses,
+  Link,
 } from "@mui/material";
 import EditSquareIcon from "@mui/icons-material/EditSquare";
 import SaveTwoToneIcon from "@mui/icons-material/SaveTwoTone";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import Model from "../components/Model";
+
 
 const Files = () => {
-  const navigate = useNavigate();
   const [directory, setDirectory] = useState();
   const [CurrentPath, setCurrentPath] = useState("");
-  const [openModal, setOpenModal] = React.useState(false);
   const [fileContant, setFileContent] = useState("");
   const [isFileOpen, setIsFileOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -43,12 +40,20 @@ const Files = () => {
     name: "",
     storageType: "",
   });
+  const [modelState, setModelState] = useState({
+    createFileFolder: false,
+    uploadFileFolder: false,
+  });
 
-  const onOpen = () => {
-    setOpenModal(true);
+  const onModelOpen = (modelName) => {
+    setModelState((prevState) => {
+      return { ...prevState, [modelName]: true };
+    });
   };
-  const onClose = () => {
-    setOpenModal(false);
+  const onModelClose = (modelName) => {
+    setModelState((prevState) => {
+      return { ...prevState, [modelName]: false };
+    });
     setFormData({ name: "", storageType: "" });
   };
 
@@ -65,12 +70,11 @@ const Files = () => {
   const getAllfolders = async (folderName, currentPath) => {
     try {
       // console.log(folderPath);
-      let response;
       const folderPath = !folderName
         ? currentPath
         : currentPath + "/" + folderName;
 
-      response = await axiosInstance.post("/file", {
+      const response = await axiosInstance.post("/file", {
         folderPath,
       });
 
@@ -87,7 +91,7 @@ const Files = () => {
     }
   };
 
-  const handleAddFolder = async (newFolderName) => {
+  const handleCreateFolder = async (newFolderName) => {
     try {
       const fullFolderPath = CurrentPath + "/" + newFolderName;
       const response = await axiosInstance.post("/file/CreateFolder", {
@@ -99,7 +103,7 @@ const Files = () => {
       console.log("error in add folder :", error);
     }
   };
-  const handleAddFile = async (newFileName) => {
+  const handleCreateFile = async (newFileName) => {
     try {
       const fullFilePath = CurrentPath + "/" + newFileName;
       // console.log(fullFilePath)
@@ -116,15 +120,15 @@ const Files = () => {
   const handleSubmit = async () => {
     if (formData.storageType == "folder") {
       console.log(formData);
-      await handleAddFolder(formData.name);
+      await handleCreateFolder(formData.name);
     } else {
       console.log(formData);
-      await handleAddFile(formData.name);
+      await handleCreateFile(formData.name);
     }
-    onClose();
+    onModelClose("createFileFolder");
   };
 
-  const handleChangingPath = (e, selectedPath) => {
+  const handleChangeDirectory = (e, selectedPath) => {
     e.preventDefault();
     if (!selectedPath) {
       setCurrentPath((prev) => "");
@@ -133,11 +137,12 @@ const Files = () => {
     }
     const currentPathArray = CurrentPath.split("/");
     const index = currentPathArray.indexOf(selectedPath);
+
+    if (index == currentPathArray.length - 1) return;
+
     const UpdatedPath = currentPathArray.slice(0, index + 1).join("/");
     setCurrentPath(() => UpdatedPath);
     getAllfolders(null, UpdatedPath);
-    // console.log(currentPathArray, index);
-    // console.log(UpdatedPath)
   };
 
   const handleOpenFile = async (fileName) => {
@@ -196,33 +201,31 @@ const Files = () => {
   const handleChangeFileOrFolderName = async (e, index, oldName) => {
     e.preventDefault();
     try {
-      const oldPath = CurrentPath+'/'+oldName; 
-      const newPath = CurrentPath+'/'+fileName;
-      const response = await axiosInstance.post("/file/changeName", {oldPath,newPath});
-      console.log("inside handlechangeName", fileName);
+      const newFIleName = fileName.split(".")[0];
+      const oldPath = CurrentPath + "/" + oldName;
+      // const newPath = CurrentPath + "/" + fileName;
+      const newPath = CurrentPath + "/" + newFIleName;
+
       setFolderNameEditing((prev) => {
-        return { ...prev, [index]: false };
+        return { ...prev, [oldName]: false };
       });
-      getAllfolders(null,CurrentPath)
+      if ((oldPath, newPath)) return;
+
+      const response = await axiosInstance.post("/file/changeName", {
+        oldPath,
+        newPath,
+      });
+      console.log("inside handlechangeName", fileName);
+      getAllfolders(null, CurrentPath);
     } catch (error) {
       console.log("error in handlechangeName:", error);
     }
   };
-  return (
-    <Box sx={{ display: "flex", height: "100vh" }}>
-      <Sidebar />
 
-      <Box component="main" sx={{ flexGrow: 1, overflow: "auto" }}>
-        <AppBar
-          position="static"
-          color="default"
-          elevation={0}
-          sx={{
-            backgroundColor: "background.paper",
-            borderBottom: "1px solid",
-            borderColor: "divider",
-          }}
-        >
+  return (
+    <>
+      <DashboardLayout>
+        <DashboardNavigation>
           <Toolbar>
             <Box sx={{ flexGrow: 1 }}>
               <Typography variant="h6" color="text.primary">
@@ -230,17 +233,16 @@ const Files = () => {
               </Typography>
             </Box>
           </Toolbar>
-        </AppBar>
-
-        <Box sx={{ p: 3 }}>
-          {/* FOLDER NAVIGATION AND ADD/DELETE BUTTONS  */}
+        </DashboardNavigation>
+        <DashboardMainContent>
+          {/* FOLDER STRUCTURE NAVIGATION AND ADD/DELETE/UPLOAD BUTTONS  */}
           <Box sx={{ mb: 5, display: "flex", alignItems: "center" }}>
             <Breadcrumbs aria-label="breadcrumb" separator="›">
               <Link
                 underline="hover"
                 color="inherit"
                 className="pathItems"
-                onClick={(e) => handleChangingPath(e)}
+                onClick={(e) => handleChangeDirectory(e)}
               >
                 Root Directory
               </Link>
@@ -252,27 +254,42 @@ const Files = () => {
                       underline="hover"
                       color="inherit"
                       className="pathItems"
-                      onClick={(e) => handleChangingPath(e, item)}
+                      onClick={(e) => handleChangeDirectory(e, item)}
                     >
                       {item}
                     </Link>
                   );
                 })}
             </Breadcrumbs>
-            <Button
-              onClick={onOpen}
-              sx={{ marginLeft: "auto", border: "1px solid black" }}
-              className="border"
-            >
-              Add New
-            </Button>
-            <Button
-              onClick={handleDeleteFileFolder}
-              sx={{ marginLeft: 2, border: "1px solid red", color: "red" }}
-              className="border"
-            >
-              Delete
-            </Button>
+            <Box sx={{ marginLeft: "auto" }}>
+              {!isFileOpen && (
+                <>
+                  <Button
+                    onClick={() => {
+                      onModelOpen("createFileFolder");
+                    }}
+                    sx={{ border: "1px solid black" }}
+                    className="border"
+                  >
+                    Add New
+                  </Button>
+                  <Button
+                    onClick={() => onModelOpen("uploadFileFolder")}
+                    sx={{ border: "1px solid black", marginLeft: 2 }}
+                    className="border"
+                  >
+                    Upload your Folder
+                  </Button>
+                </>
+              )}
+              <Button
+                onClick={handleDeleteFileFolder}
+                sx={{ marginLeft: 2, border: "1px solid red", color: "red" }}
+                className="border"
+              >
+                Delete
+              </Button>
+            </Box>
           </Box>
 
           {/* FOLDERS AND FILES */}
@@ -281,6 +298,7 @@ const Files = () => {
               {directory?.files?.length > 0 ||
               directory?.folders?.length > 0 ? (
                 <>
+                  {/* FOLDERS */}
                   {directory?.folders?.map((item, index) => {
                     return (
                       <Box
@@ -298,10 +316,15 @@ const Files = () => {
                         />
 
                         <Box>
-                          {folderNameEditing[index] ? (
+                          {folderNameEditing[item] ? (
                             <form
                               onSubmit={(e) => {
                                 handleChangeFileOrFolderName(e, index, item);
+                              }}
+                              onBlur={() => {
+                                setFolderNameEditing(() => {
+                                  return { [item]: false };
+                                });
                               }}
                             >
                               <TextField
@@ -320,7 +343,7 @@ const Files = () => {
                                 sx={{ textAlign: "center" }}
                                 onDoubleClick={() => {
                                   setFolderNameEditing((prev) => {
-                                    return { [index]: true };
+                                    return { [item]: true };
                                   });
                                   setFileName(item);
                                 }}
@@ -333,6 +356,7 @@ const Files = () => {
                       </Box>
                     );
                   })}
+                  {/* FILES */}
                   {directory?.files?.map((item, index) => {
                     return (
                       <Box
@@ -345,22 +369,48 @@ const Files = () => {
                           loading="lazy"
                           className="folderImage"
                           onDoubleClick={() => {
-                            console.log(`from file ${item}`);
                             handleOpenFile(item);
                           }}
                         />
-                        <Tooltip title="double click to change Name">
-                          <Box>
-                            <Typography
-                              variant="subtitle2"
-                              color="text.primary"
-                              sx={{ textAlign: "center" }}
-                              onDoubleClick
+                        <Box>
+                          {folderNameEditing[item] ? (
+                            <form
+                              onSubmit={(e) => {
+                                handleChangeFileOrFolderName(e, index, item);
+                              }}
+                              onBlur={() => {
+                                console.log("hello in blur");
+                                setFolderNameEditing(() => {
+                                  return { [item]: false };
+                                });
+                              }}
                             >
-                              {item}
-                            </Typography>
-                          </Box>
-                        </Tooltip>
+                              <TextField
+                                id="standard-basic"
+                                // label="change name"
+                                variant="standard"
+                                sx={{ width: "80px", textAlign: "center" }}
+                                value={fileName}
+                                onChange={(e) => setFileName(e.target.value)}
+                              />
+                            </form>
+                          ) : (
+                            <Tooltip title="double click to change Name">
+                              <Typography
+                                color="text.primary"
+                                sx={{ textAlign: "center" }}
+                                onDoubleClick={() => {
+                                  setFolderNameEditing((prev) => {
+                                    return { [item]: true };
+                                  });
+                                  setFileName(item);
+                                }}
+                              >
+                                {item}
+                              </Typography>
+                            </Tooltip>
+                          )}
+                        </Box>
                       </Box>
                     );
                   })}
@@ -374,9 +424,17 @@ const Files = () => {
           ) : (
             <Paper elevation={3} sx={{ p: 2, whiteSpace: "pre-wrap" }}>
               <Box className="" sx={{ display: "flex", alignItems: "center" }}>
-                <Typography sx={{ marginRight: "auto" }}>
+                {/* <Typography sx={{ marginRight: "auto" }}>
                   todo 'filename'
-                </Typography>
+                </Typography> */}
+                <Tooltip title="Copy File">
+                  <ContentCopyIcon
+                    sx={{ color: "gray", fontSize: 40, marginLeft: "auto" }}
+                    onClick={() => {
+                      navigator.clipboard.writeText(fileContant);
+                    }}
+                  />
+                </Tooltip>
                 <Tooltip title="Edit File">
                   <EditSquareIcon
                     sx={{ color: "gray", fontSize: 40 }}
@@ -408,23 +466,17 @@ const Files = () => {
               />
             </Paper>
           )}
-        </Box>
-      </Box>
+        </DashboardMainContent>
+      </DashboardLayout>
 
-      <Dialog
-        open={openModal}
-        onClose={onClose}
-        maxWidth="sm"
-        fullWidth
-        aria-labelledby="create-user-dialog"
+      {/* FILE FOLDER CREATE MODEL */}
+      <Model
+        openModal={modelState.createFileFolder}
+        closeModal={() => onModelClose("createFileFolder")}
+        handleSubmit={handleSubmit}
+        modelTitle="Select type"
       >
-        <DialogTitle id="create-user-dialog">
-          <Typography variant="h5" component="div" sx={{ fontWeight: "bold" }}>
-            select
-          </Typography>
-        </DialogTitle>
-
-        <DialogContent>
+        <>
           <FormControl fullWidth>
             <InputLabel id="demo-simple-select-label">type</InputLabel>
             <Select
@@ -432,7 +484,7 @@ const Files = () => {
               id="demo-simple-select"
               label="storage type"
               name="storageType"
-              value={formData.storageType}
+              value={formData?.storageType}
               onChange={handleChange}
             >
               <MenuItem value="">selecet Option</MenuItem>
@@ -446,21 +498,34 @@ const Files = () => {
               margin="normal"
               label="name"
               name="name"
-              value={formData.name}
+              value={formData?.name}
               onChange={handleChange}
             />
           </Box>
-        </DialogContent>
-        <DialogActions sx={{ p: 3 }}>
-          <Button variant="outlined" color="error" onClick={onClose}>
-            Cancel
+        </>
+      </Model>
+      {/* FILE FOLDER UPLOAD MODEL */}
+      <Model
+        openModal={modelState.uploadFileFolder}
+        closeModal={() => {
+          onModelClose("uploadFileFolder");
+        }}
+        // handleSubmit={handleSubmit}
+        modelTitle="Upload File or Folder"
+      >
+        <>
+          <Button>
+            <input
+              type="file"
+              className="border"
+              webkitdirectory="true"
+              directory="true"
+              multiple
+            />
           </Button>
-          <Button variant="contained" onClick={handleSubmit} color="primary">
-            Submit
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </Box>
+        </>
+      </Model>
+    </>
   );
 };
 

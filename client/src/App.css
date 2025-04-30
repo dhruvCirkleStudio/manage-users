@@ -1,10 +1,11 @@
 .folderImage {
   height: 80px;
   width: 80px;
+  margin-bottom: 5px;
 }
 
 .border {
-  border: 1px solid rgb(153, 153, 153);
+  border: 1px solid rgb(214, 131, 131);
   border-radius: 5px;
 }
 

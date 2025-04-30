@@ -24,12 +24,8 @@ export default function Auth() {
   };
 
   useEffect(() => {
-    const token = localStorage.getItem("accessToken");
-    if (!token) {
-      console.log("inside auth");
-      checkAuthentication();
-    }
-    // navigate("/users");
+    // const token = localStorage.getItem("accessToken");
+    checkAuthentication();
   }, []);
 
   useEffect(() => {

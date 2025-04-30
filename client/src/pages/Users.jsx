@@ -1,30 +1,23 @@
-import React, { Suspense } from "react";
-import { useCallback, useEffect, useState } from "react";
+import React, { lazy, Suspense } from "react";
+import DashboardLayout, {
+  DashboardNavigation,
+  DashboardMainContent,
+} from "../components/DashboardLayout";
+import { useCallback, useState } from "react";
 import axiosInstance from "../utils/axiosInstance";
 import { useNavigate } from "react-router";
 import ResetPasswordModel from "../components/ResetPasswordModel";
 import { toast } from "react-toastify";
-const UsersTable = React.lazy(() => import("../components/UsersTable"));
+const UsersTable = lazy(() => import("../components/UsersTable"));
 
 import {
   Box,
-  Drawer,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemText,
-  AppBar,
   Toolbar,
   Typography,
   Button,
   Menu,
   MenuItem,
-  Paper,
 } from "@mui/material";
-import DashboardIcon from "@mui/icons-material/Dashboard";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import FolderOpenIcon from "@mui/icons-material/FolderOpen";
-import Sidebar from "../components/Sidebar";
 
 const Users = () => {
   const navigate = useNavigate();
@@ -78,33 +71,16 @@ const Users = () => {
   };
 
   return (
-    <Box sx={{ display: "flex", height: "100vh" }}>
-        
-      {/* Sidebar */}
-      <Sidebar/>
-
-      {/* Main content */}
-      <Box component="main" sx={{ flexGrow: 1, overflow: "auto" }}>
-        {/* Top navigation */}
-        <AppBar
-          position="static"
-          color="default"
-          elevation={0}
-          sx={{
-            backgroundColor: "background.paper",
-            borderBottom: "1px solid",
-            borderColor: "divider",
-          }}
-        >
+    <>
+      <DashboardLayout>
+        <DashboardNavigation>
           <Toolbar>
             <Box sx={{ flexGrow: 1 }}>
               <Typography variant="h6" color="text.primary">
                 User Management
               </Typography>
             </Box>
-
-            {/* Account Menu */}
-            <div>
+            <Box>
               <Button
                 id="account-button"
                 aria-controls={open ? "account-menu" : undefined}
@@ -148,19 +124,17 @@ const Users = () => {
                   Sign out
                 </MenuItem>
               </Menu>
-            </div>
+            </Box>
           </Toolbar>
-        </AppBar>
-
-        {/* Main content area */}
-        <Box sx={{ p: 3 }}>
-          {/* User Table */}
+        </DashboardNavigation>
+        <DashboardMainContent>
           <Suspense fallback={<div>Loading users...</div>}>
             <UsersTable />
           </Suspense>
-        </Box>
-      </Box>
+        </DashboardMainContent>
+      </DashboardLayout>
 
+      {/* RESET PASSWORD MODEL */}
       <ResetPasswordModel
         isOpen={modelState.resetPasswordModel}
         onClose={() => {
@@ -176,7 +150,7 @@ const Users = () => {
         passwords={passwords}
         setPasswords={setPasswords}
       />
-    </Box>
+    </>
   );
 };
 

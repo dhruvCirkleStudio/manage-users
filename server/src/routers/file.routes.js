@@ -11,5 +11,6 @@ fileRoutes.route("/readFile").post(authenticateUser,readFile);
 fileRoutes.route("/saveFile").post(authenticateUser,saveFile);
 fileRoutes.route("/delete").post(authenticateUser,deleteFileOrFolder);
 fileRoutes.route("/changeName").post(authenticateUser,changeFileOrFolderName);
+fileRoutes.route("/changeName").post(authenticateUser,changeFileOrFolderName);
 
 export default fileRoutes;

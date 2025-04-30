@@ -7,7 +7,6 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
-import DashboardIcon from "@mui/icons-material/Dashboard";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import FolderOpenIcon from "@mui/icons-material/FolderOpen";
 
@@ -54,6 +53,16 @@ export default function Sidebar() {
             >
               <FolderOpenIcon sx={{ mr: 1 }} />
               <ListItemText primary="files" />
+            </ListItemButton>
+          </ListItem>
+          <ListItem disablePadding>
+            <ListItemButton
+              onClick={() => {
+                navigate("/LocalFiles");
+              }}
+            >
+              <FolderOpenIcon sx={{ mr: 1 }} />
+              <ListItemText primary="Local Files" />
             </ListItemButton>
           </ListItem>
         </List>
