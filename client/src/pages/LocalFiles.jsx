@@ -14,7 +14,7 @@ import fileImage from "../assets/file.svg";
 import DashboardLayout, {
   DashboardMainContent,
   DashboardNavigation,
-} from "../components/DashboardLayout";
+} from "../shared/DashboardLayout";
 
 export default function LocalFiles() {
   const [directory, setDirectory] = useState();

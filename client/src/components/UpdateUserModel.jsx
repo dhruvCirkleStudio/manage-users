@@ -1,11 +1,6 @@
 import React, { memo, useState } from "react";
 import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
   TextField,
-  Button,
   MenuItem,
   Select,
   FormControl,
@@ -16,87 +11,90 @@ import {
 import axiosInstance from "../utils/axiosInstance";
 import { toast } from "react-toastify";
 import { emailRegex } from "../shared/constants";
+import Model from "../shared/Model";
 
-const UpdateUserModel = memo(({ title, isOpen, updateUserModel, setUpdateUserModel,formData,setFormData,getAllUsers }) => {
-  const initialFormdata = {
-    userName: "",
-    email: "",
-    gender: "",
-    userType: "",
-    deviceType: "",
-  };
-  const [error, setError] = useState({});
-//   console.log(formData);
+const UpdateUserModel = memo(
+  ({
+    title,
+    isOpen,
+    updateUserModel,
+    setUpdateUserModel,
+    formData,
+    setFormData,
+    getAllUsers,
+  }) => {
+    const initialFormdata = {
+      userName: "",
+      email: "",
+      gender: "",
+      userType: "",
+      deviceType: "",
+    };
+    const [error, setError] = useState({});
+    //   console.log(formData);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-    if (error[name]) {
-      setError((prev) => ({ ...prev, [name]: "" }));
-    }
-  };
+    const handleChange = (e) => {
+      const { name, value } = e.target;
+      setFormData((prev) => ({ ...prev, [name]: value }));
+      if (error[name]) {
+        setError((prev) => ({ ...prev, [name]: "" }));
+      }
+    };
 
-  const validate = () => {
-    const errors = {};
+    const validate = () => {
+      const errors = {};
 
-    if (!formData.userName.trim()) {
-      errors.userName = "Please enter name!";
-    }
+      if (!formData.userName.trim()) {
+        errors.userName = "Please enter name!";
+      }
 
-    if (!formData.email.trim()) {
-      errors.email = "Please enter email!";
-    } else if (!emailRegex.test(formData.email)) {
-      errors.email = "Invalid email format!";
-    }
+      if (!formData.email.trim()) {
+        errors.email = "Please enter email!";
+      } else if (!emailRegex.test(formData.email)) {
+        errors.email = "Invalid email format!";
+      }
 
-    if (!formData.gender) {
-      errors.gender = "Please select gender!";
-    }
+      if (!formData.gender) {
+        errors.gender = "Please select gender!";
+      }
 
-    if (!formData.userType) {
-      errors.userType = "Please select user type!";
-    }
+      if (!formData.userType) {
+        errors.userType = "Please select user type!";
+      }
 
-    if (!formData.deviceType) {
-      errors.deviceType = "Please select device type!";
-    }
+      if (!formData.deviceType) {
+        errors.deviceType = "Please select device type!";
+      }
 
-    setError(errors);
-    return Object.keys(errors).length === 0;
-  };
+      setError(errors);
+      return Object.keys(errors).length === 0;
+    };
 
-  const handleUpdateUser = async () => {
-    try {
-      if (!validate()) return;
-      const response = await axiosInstance.patch("/user/update", formData);
-      toast.success(response?.data?.message);
-      console.log(response);
-      
-      getAllUsers()
-      onClose();
-    } catch (error) {
-      console.error("Error while registering user:", error);
-      toast.error(error?.response?.data?.message || "update failed");
-    }
-  };
-  const onClose = () => {
-    setFormData({ ...initialFormdata });
-    setUpdateUserModel(false);
-  };
-  return (
-    <Dialog
-      open={isOpen}
-      onClose={onClose}
-      maxWidth="sm"
-      fullWidth
-      aria-labelledby="create-user-dialog"
-    >
-      <DialogTitle id="create-user-dialog">
-        <Typography variant="h5" component="div" sx={{ fontWeight: "bold" }}>
-          {title}
-        </Typography>
-      </DialogTitle>
-      <DialogContent>
+    const handleUpdateUser = async () => {
+      try {
+        if (!validate()) return;
+        const response = await axiosInstance.patch("/user/update", formData);
+        toast.success(response?.data?.message);
+        console.log(response);
+
+        getAllUsers();
+        onClose();
+      } catch (error) {
+        console.error("Error while registering user:", error);
+        toast.error(error?.response?.data?.message || "update failed");
+      }
+    };
+    const onClose = () => {
+      setFormData({ ...initialFormdata });
+      setUpdateUserModel(false);
+    };
+    return (
+      <Model
+        modelTitle={title}
+        openModal={isOpen}
+        closeModal={onClose}
+        handleSubmit={handleUpdateUser}
+      >
         <Box component="form">
           <TextField
             fullWidth
@@ -187,17 +185,9 @@ const UpdateUserModel = memo(({ title, isOpen, updateUserModel, setUpdateUserMod
             )}
           </FormControl>
         </Box>
-      </DialogContent>
-      <DialogActions sx={{ p: 3 }}>
-        <Button variant="outlined" color="error" onClick={onClose}>
-          Cancel
-        </Button>
-        <Button variant="contained" onClick={handleUpdateUser} color="primary">
-          Submit
-        </Button>
-      </DialogActions>
-    </Dialog>
-  );
-});
+      </Model>
+    );
+  }
+);
 
 export default UpdateUserModel;

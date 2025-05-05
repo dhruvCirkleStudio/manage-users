@@ -2,38 +2,72 @@ import path from "node:path";
 import { apiResponse, errorResponse } from "../utils/response.js";
 import fs from "fs/promises";
 
+// export const getAllFolders = async (req, res) => {
+//   try {
+//     const { folderPath } = req.body;
+//     console.log(folderPath);
+
+//     const directoryPath = folderPath
+//       ? process.env.ROOT_FOLDER_PATH + "/" + folderPath
+//       : process.env.ROOT_FOLDER_PATH;
+
+//     const items = await fs.readdir(directoryPath);
+
+//     const files = [];
+//     const folders = [];
+//     for (const item of items) {
+//       const itemPath = path.join(directoryPath, item);
+//       const stats = await fs.stat(itemPath);
+//       if (stats.isFile()) {
+//         files.push(item);
+//       } else if (stats.isDirectory()) {
+//         folders.push(item);
+//       }
+//     }
+//     const directory = { files, folders };
+
+//     apiResponse(res, 200, {
+//       status: true,
+//       message: "folder recieved successfully!",
+//       data: { directory },
+//     });
+//   } catch (error) {
+//     console.log("error in getAllFolders:", error);
+//     errorResponse(res, 500, { message: "error in fetching data!" });
+//   }
+// };
+
 export const getAllFolders = async (req, res) => {
   try {
     const { folderPath } = req.body;
-    console.log(folderPath);
+    // console.log(folderPath);
 
     const directoryPath = folderPath
-      ? process.env.ROOT_FOLDER_PATH + "/" + folderPath
+      ? path.join(process.env.ROOT_FOLDER_PATH, folderPath)
       : process.env.ROOT_FOLDER_PATH;
 
-    const items = await fs.readdir(directoryPath);
+    const dirents = await fs.readdir(directoryPath, { withFileTypes: true });
 
     const files = [];
     const folders = [];
-    for (const item of items) {
-      const itemPath = path.join(directoryPath, item);
-      const stats = await fs.stat(itemPath);
-      if (stats.isFile()) {
-        files.push(item);
-      } else if (stats.isDirectory()) {
-        folders.push(item);
+
+    for (const dirent of dirents) {
+      if (dirent.isFile()) {
+        files.push(dirent.name);
+      } else if (dirent.isDirectory()) {
+        folders.push(dirent.name);
       }
     }
     const directory = { files, folders };
 
     apiResponse(res, 200, {
       status: true,
-      message: "folder recieved successfully!",
+      message: "Folder received successfully!",
       data: { directory },
     });
   } catch (error) {
     console.log("error in getAllFolders:", error);
-    errorResponse(res, 500, { message: "error in fetching data!" });
+    errorResponse(res, 500, { message: "Error in fetching data!" });
   }
 };
 
@@ -183,10 +217,11 @@ export const deleteFileOrFolder = async (req, res) => {
 
 export const changeFileOrFolderName = async (req, res) => {
   try {
+    console.log("inside changefileorfoldername");
     // const { currentPath, newName } = req.body;
     const { oldPath, newPath } = req.body;
-    console.log(newPath);
-    if (!oldPath || !newPath) {
+    console.log(oldPath, newPath);
+    if (!oldPath && !newPath) {
       return apiResponse(res, 400, {
         status: false,
         message: "Both oldPath and newPath are required.",
@@ -199,6 +234,13 @@ export const changeFileOrFolderName = async (req, res) => {
     const fullNewPath = oldPathExtName
       ? path.join(process.env.ROOT_FOLDER_PATH, newPath.trim() + oldPathExtName)
       : path.join(process.env.ROOT_FOLDER_PATH, newPath.trim());
+
+    // const fullNewPath = newPathExt
+    //   ? path.join(process.env.ROOT_FOLDER_PATH, newPath.trim() + newPathExt)
+    //   : path.join(
+    //       process.env.ROOT_FOLDER_PATH,
+    //       newPath.trim() + oldPathExtName
+    //     );
 
     try {
       await fs.access(fullOldPath); // Check if oldPath exists
@@ -222,6 +264,22 @@ export const changeFileOrFolderName = async (req, res) => {
       status: false,
       message: "Something went wrong. Please try again later.",
       data: null,
+    });
+  }
+};
+
+export const uploadFile = async (req, res) => {
+  try {
+    if (!req.files) {
+      return res.status(400).send('No file uploaded.');
+    }
+    res.send(`File uploaded successfully`);
+  } catch (error) {
+    console.log("error in upload file::", error);
+    errorResponse(res, 500, {
+      status: false,
+      message:
+        "Something went wrong while uploading file Please try again later.",
     });
   }
 };

@@ -30,6 +30,7 @@ export default function Model({
       </DialogTitle>
 
       <DialogContent>{children}</DialogContent>
+      
       <DialogActions sx={{ p: 3 }}>
         <Button variant="outlined" color="error" onClick={closeModal}>
           Cancel

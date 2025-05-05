@@ -1,13 +1,9 @@
 import React from "react";
 import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
   TextField,
-  Button,
   Box,
 } from "@mui/material";
+import Model from "../shared/Model";
 
 const ResetPasswordModel = ({
   isOpen,
@@ -25,58 +21,36 @@ const ResetPasswordModel = ({
   };
 
   return (
-    <Dialog
-      open={isOpen}
-      onClose={onClose}
+    <Model
+      openModal={isOpen}
+      closeModal={onClose}
       aria-labelledby="reset-password-dialog"
-      maxWidth="sm"
-      fullWidth
+      modelTitle="Reset Password"
+      handleSubmit={resetPassword}
     >
-      <DialogTitle id="reset-password-dialog" sx={{ fontWeight: "bold" }}>
-        Reset Password
-      </DialogTitle>
-      <DialogContent>
-        <Box component="form" sx={{ mt: 2 }}>
-          <TextField
-            fullWidth
-            margin="normal"
-            type="password"
-            label="Current Password"
-            name="oldPassword"
-            value={passwords.oldPassword}
-            onChange={handleChange}
-            variant="outlined"
-          />
-          <TextField
-            fullWidth
-            margin="normal"
-            type="password"
-            label="New Password"
-            name="newPassword"
-            value={passwords.newPassword}
-            onChange={handleChange}
-            variant="outlined"
-          />
-        </Box>
-      </DialogContent>
-      <DialogActions sx={{ p: 3 }}>
-        <Button
+      <Box component="form" sx={{ mt: 2 }}>
+        <TextField
+          fullWidth
+          margin="normal"
+          type="password"
+          label="Current Password"
+          name="oldPassword"
+          value={passwords.oldPassword}
+          onChange={handleChange}
           variant="outlined"
-          color="error"
-          onClick={onClose}
-          sx={{ mr: 2 }}
-        >
-          Cancel
-        </Button>
-        <Button
-          variant="contained"
-          onClick={resetPassword}
-          color="primary"
-        >
-          Submit
-        </Button>
-      </DialogActions>
-    </Dialog>
+        />
+        <TextField
+          fullWidth
+          margin="normal"
+          type="password"
+          label="New Password"
+          name="newPassword"
+          value={passwords.newPassword}
+          onChange={handleChange}
+          variant="outlined"
+        />
+      </Box>
+    </Model>
   );
 };
 

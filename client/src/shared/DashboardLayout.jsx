@@ -1,6 +1,6 @@
 import { AppBar, Box } from "@mui/material";
 import React from "react";
-import Sidebar from "./Sidebar";
+import Sidebar from "../components/Sidebar";
 
 export function DashboardNavigation({ children, navTitle }) {
   return (

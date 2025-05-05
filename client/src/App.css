@@ -5,7 +5,7 @@
 }
 
 .border {
-  border: 1px solid rgb(214, 131, 131);
+  border: 1px solid black;
   border-radius: 5px;
 }
 
@@ -13,11 +13,9 @@
   display: flex;
   font-weight: 600;
 }
-.pathItems {
-  /* list-style: none;
-  margin: 0px 0px 0px 0px;
-  cursor: pointer; */
-}
+/* .pathItems {
+  cursor: pointer;
+} */
 .pathItems:hover {
   color: #1976d2;
   text-decoration: underline;

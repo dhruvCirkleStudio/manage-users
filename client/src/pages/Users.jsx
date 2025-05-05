@@ -2,7 +2,7 @@ import React, { lazy, Suspense } from "react";
 import DashboardLayout, {
   DashboardNavigation,
   DashboardMainContent,
-} from "../components/DashboardLayout";
+} from "../shared/DashboardLayout";
 import { useCallback, useState } from "react";
 import axiosInstance from "../utils/axiosInstance";
 import { useNavigate } from "react-router";

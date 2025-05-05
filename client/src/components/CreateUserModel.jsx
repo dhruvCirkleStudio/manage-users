@@ -16,6 +16,7 @@ import {
 import axiosInstance from "../utils/axiosInstance";
 import { toast } from "react-toastify";
 import { emailRegex } from "../shared/constants";
+import Model from "../shared/Model";
 
 const CreateUserModel = ({
   title,
@@ -93,130 +94,114 @@ const CreateUserModel = ({
     setCreateUserModel(false);
   };
   return (
-    <Dialog
-      open={isOpen}
-      onClose={onClose}
-      maxWidth="sm"
-      fullWidth
-      aria-labelledby="create-user-dialog"
+    <Model
+      modelTitle={title}
+      openModal={isOpen}
+      closeModal={onClose}
+      handleSubmit={handleCreateUser}
     >
-      <DialogTitle id="create-user-dialog">
-        <Typography variant="h5" component="div" sx={{ fontWeight: "bold" }}>
-          {title}
-        </Typography>
-      </DialogTitle>
-      <DialogContent>
-        <Box component="form">
-          <TextField
-            fullWidth
-            margin="normal"
-            label="User Name"
-            name="userName"
-            value={formData.userName}
-            onChange={handleChange}
-            error={!!error.userName}
-            helperText={error.userName}
-          />
+      <Box component="form">
+        <TextField
+          fullWidth
+          margin="normal"
+          label="User Name"
+          name="userName"
+          value={formData.userName}
+          onChange={handleChange}
+          error={!!error.userName}
+          helperText={error.userName}
+        />
 
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Email"
-            name="email"
-            type="email"
-            value={formData.email}
-            onChange={handleChange}
-            error={!!error.email}
-            helperText={error.email}
-          />
+        <TextField
+          fullWidth
+          margin="normal"
+          label="Email"
+          name="email"
+          type="email"
+          value={formData.email}
+          onChange={handleChange}
+          error={!!error.email}
+          helperText={error.email}
+        />
 
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Password"
-            name="password"
-            type="password"
-            value={formData.password}
-            onChange={handleChange}
-            error={!!error.password}
-            helperText={error.password}
-          />
+        <TextField
+          fullWidth
+          margin="normal"
+          label="Password"
+          name="password"
+          type="password"
+          value={formData.password}
+          onChange={handleChange}
+          error={!!error.password}
+          helperText={error.password}
+        />
 
-          <Box sx={{ display: "flex", gap: 2 }}>
-            <FormControl fullWidth margin="normal" error={!!error.gender}>
-              <InputLabel id="gender-label">Gender</InputLabel>
-              <Select
-                labelId="gender-label"
-                label="Gender"
-                name="gender"
-                value={formData.gender}
-                onChange={handleChange}
-              >
-                <MenuItem value="">select gender</MenuItem>
-                <MenuItem value="male">Male</MenuItem>
-                <MenuItem value="female">Female</MenuItem>
-                <MenuItem value="other">Other</MenuItem>
-              </Select>
-              {error.gender && (
-                <Typography variant="caption" color="error">
-                  {error.gender}
-                </Typography>
-              )}
-            </FormControl>
-
-            <FormControl fullWidth margin="normal" error={!!error.userType}>
-              <InputLabel id="userType-label">User Type</InputLabel>
-              <Select
-                labelId="userType-label"
-                label="User Type"
-                name="userType"
-                value={formData.userType}
-                onChange={handleChange}
-              >
-                <MenuItem value="">Select User Type</MenuItem>
-                <MenuItem value="admin">Admin</MenuItem>
-                <MenuItem value="user">User</MenuItem>
-                <MenuItem value="guest">Guest</MenuItem>
-              </Select>
-              {error.userType && (
-                <Typography variant="caption" color="error">
-                  {error.userType}
-                </Typography>
-              )}
-            </FormControl>
-          </Box>
-
-          <FormControl fullWidth margin="normal" error={!!error.deviceType}>
-            <InputLabel id="deviceType-label">Device Type</InputLabel>
+        <Box sx={{ display: "flex", gap: 2 }}>
+          <FormControl fullWidth margin="normal" error={!!error.gender}>
+            <InputLabel id="gender-label">Gender</InputLabel>
             <Select
-              labelId="deviceType-label"
-              label="Device Type"
-              name="deviceType"
-              value={formData.deviceType}
+              labelId="gender-label"
+              label="Gender"
+              name="gender"
+              value={formData.gender}
               onChange={handleChange}
             >
-              <MenuItem value="">Select Device Type</MenuItem>
-              <MenuItem value="mobile">Mobile</MenuItem>
-              <MenuItem value="tablet">Tablet</MenuItem>
-              <MenuItem value="pc">PC</MenuItem>
+              <MenuItem value="">select gender</MenuItem>
+              <MenuItem value="male">Male</MenuItem>
+              <MenuItem value="female">Female</MenuItem>
+              <MenuItem value="other">Other</MenuItem>
             </Select>
-            {error.deviceType && (
+            {error.gender && (
               <Typography variant="caption" color="error">
-                {error.deviceType}
+                {error.gender}
+              </Typography>
+            )}
+          </FormControl>
+
+          <FormControl fullWidth margin="normal" error={!!error.userType}>
+            <InputLabel id="userType-label">User Type</InputLabel>
+            <Select
+              labelId="userType-label"
+              label="User Type"
+              name="userType"
+              value={formData.userType}
+              onChange={handleChange}
+            >
+              <MenuItem value="">Select User Type</MenuItem>
+              <MenuItem value="admin">Admin</MenuItem>
+              <MenuItem value="user">User</MenuItem>
+              <MenuItem value="guest">Guest</MenuItem>
+            </Select>
+            {error.userType && (
+              <Typography variant="caption" color="error">
+                {error.userType}
               </Typography>
             )}
           </FormControl>
         </Box>
-      </DialogContent>
-      <DialogActions sx={{ p: 3 }}>
-        <Button variant="outlined" color="error" onClick={onClose}>
-          Cancel
-        </Button>
-        <Button variant="contained" onClick={handleCreateUser} color="primary">
-          Submit
-        </Button>
-      </DialogActions>
-    </Dialog>
+
+        <FormControl fullWidth margin="normal" error={!!error.deviceType}>
+          <InputLabel id="deviceType-label">Device Type</InputLabel>
+          <Select
+            labelId="deviceType-label"
+            label="Device Type"
+            name="deviceType"
+            value={formData.deviceType}
+            onChange={handleChange}
+          >
+            <MenuItem value="">Select Device Type</MenuItem>
+            <MenuItem value="mobile">Mobile</MenuItem>
+            <MenuItem value="tablet">Tablet</MenuItem>
+            <MenuItem value="pc">PC</MenuItem>
+          </Select>
+          {error.deviceType && (
+            <Typography variant="caption" color="error">
+              {error.deviceType}
+            </Typography>
+          )}
+        </FormControl>
+      </Box>
+    </Model>
   );
 };
 

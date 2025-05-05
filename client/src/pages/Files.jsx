@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import DashboardLayout, {
   DashboardNavigation,
   DashboardMainContent,
-} from "../components/DashboardLayout";
+} from "../shared/DashboardLayout";
 import { useState } from "react";
 import axiosInstance from "../utils/axiosInstance";
 import folderImage from "../assets/folder.svg";
@@ -27,8 +27,7 @@ import {
 import EditSquareIcon from "@mui/icons-material/EditSquare";
 import SaveTwoToneIcon from "@mui/icons-material/SaveTwoTone";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
-import Model from "../components/Model";
-
+import Model from "../shared/Model";
 
 const Files = () => {
   const [directory, setDirectory] = useState();
@@ -101,6 +100,7 @@ const Files = () => {
       getAllfolders(null, CurrentPath);
     } catch (error) {
       console.log("error in add folder :", error);
+      toast.error(error.response.data.message);
     }
   };
   const handleCreateFile = async (newFileName) => {
@@ -147,7 +147,10 @@ const Files = () => {
 
   const handleOpenFile = async (fileName) => {
     try {
-      const fullFilePath = CurrentPath + "/" + fileName;
+      const fullFilePath = fileName
+        ? CurrentPath + "/" + fileName
+        : CurrentPath;
+      console.log("inside open file", fullFilePath);
       const response = await axiosInstance.post("/file/readFile", {
         fileName: fullFilePath,
       });
@@ -167,6 +170,7 @@ const Files = () => {
         data: fileContant,
       });
       // setIsFileOpen(true);
+      handleOpenFile();
       setIsEditing(false);
       console.log(response.data.message);
       setFileContent(response.data.fileContent);
@@ -203,25 +207,51 @@ const Files = () => {
     try {
       const newFIleName = fileName.split(".")[0];
       const oldPath = CurrentPath + "/" + oldName;
-      // const newPath = CurrentPath + "/" + fileName;
       const newPath = CurrentPath + "/" + newFIleName;
 
       setFolderNameEditing((prev) => {
         return { ...prev, [oldName]: false };
       });
-      if ((oldPath, newPath)) return;
+
+      if (!oldPath || !newPath) return;
 
       const response = await axiosInstance.post("/file/changeName", {
         oldPath,
         newPath,
+        // newPathExt:newFileExt
       });
-      console.log("inside handlechangeName", fileName);
       getAllfolders(null, CurrentPath);
     } catch (error) {
       console.log("error in handlechangeName:", error);
     }
   };
+  const [selectedFile, setSelectedFile] = useState(null);
+  const onFileChange = (event) => {
+    console.log(event.target.files);
+    setSelectedFile(event.target.files);
+    // console.log(selectedFile[1].webkitRelativePath);
+  };
 
+  const onFileUpload = async () => {
+    try {
+      if (!selectedFile) return;
+
+      const formData = new FormData();
+      for (let i = 0; i < selectedFile.length; i++) {
+        const file = selectedFile[i];
+        formData.append("files", file);
+        formData.append("relativePaths[]", file.webkitRelativePath);
+      }
+
+      console.log(selectedFile);
+      const response = await axiosInstance.post("/file/uploadFile", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      console.log(response);
+    } catch (error) {
+      console.log("error in fileupload", error);
+    }
+  };
   return (
     <>
       <DashboardLayout>
@@ -235,7 +265,7 @@ const Files = () => {
           </Toolbar>
         </DashboardNavigation>
         <DashboardMainContent>
-          {/* FOLDER STRUCTURE NAVIGATION AND ADD/DELETE/UPLOAD BUTTONS  */}
+          {/* NAVIGATION OF FOLDER STRUCTURE AND ADD/DELETE/UPLOAD BUTTONS  */}
           <Box sx={{ mb: 5, display: "flex", alignItems: "center" }}>
             <Breadcrumbs aria-label="breadcrumb" separator="›">
               <Link
@@ -278,7 +308,7 @@ const Files = () => {
                     sx={{ border: "1px solid black", marginLeft: 2 }}
                     className="border"
                   >
-                    Upload your Folder
+                    Upload
                   </Button>
                 </>
               )}
@@ -310,8 +340,15 @@ const Files = () => {
                           src={folderImage}
                           loading="lazy"
                           className="folderImage"
+                          draggable="true"
+                          ondragstart={() => {
+                            console.log("drag start");
+                          }}
                           onDoubleClick={() => {
                             getAllfolders(`${item}`, CurrentPath);
+                          }}
+                          onClick={() => {
+                            console.log(item);
                           }}
                         />
 
@@ -510,17 +547,19 @@ const Files = () => {
         closeModal={() => {
           onModelClose("uploadFileFolder");
         }}
-        // handleSubmit={handleSubmit}
+        handleSubmit={onFileUpload}
         modelTitle="Upload File or Folder"
       >
         <>
-          <Button>
+          <Button sx={{ p: 1, border: "1px solid black" }}>
             <input
               type="file"
-              className="border"
+              name="files"
+              className=""
               webkitdirectory="true"
               directory="true"
               multiple
+              onChange={onFileChange}
             />
           </Button>
         </>
