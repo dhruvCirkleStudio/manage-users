@@ -65,6 +65,16 @@ export default function Sidebar() {
               <ListItemText primary="Local Files" />
             </ListItemButton>
           </ListItem>
+          <ListItem disablePadding>
+            <ListItemButton
+              onClick={() => {
+                navigate("/Meeting");
+              }}
+            >
+              <FolderOpenIcon sx={{ mr: 1 }} />
+              <ListItemText primary="Meeting" />
+            </ListItemButton>
+          </ListItem>
         </List>
       </Drawer>
     </>

@@ -8,7 +8,7 @@ import userRouter from "./routers/user.routes.js";
 import authRouter from "./routers/auth.routes.js";
 import { swaggerSpec, swaggerUi } from "./utils/swagger.js";
 import fileRoutes from "./routers/file.routes.js";
-import multer from "multer"
+import multer from "multer";
 
 const app = express();
 const PORT = 8000;
@@ -19,9 +19,9 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: "http://localhost:5174",
     credentials: true,
-  })
+  }),
 );
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));

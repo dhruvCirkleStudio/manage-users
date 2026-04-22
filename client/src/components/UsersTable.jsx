@@ -30,6 +30,8 @@ const UsersTable = memo(() => {
   const [updateUserModel, setUpdateUserModel] = useState(false);
   const [formData, setFormData] = useState({});
   const [users, setUsers] = useState([]);
+  const [searchWord,setSearchWord] = useState("");
+  const [fillteredUsers,setFilteredUsers] = useState([...users]);
 
   const deleteUser = useCallback(async (id) => {
     try {
@@ -49,11 +51,33 @@ const UsersTable = memo(() => {
       const response = await axiosInstance.get("/user");
       // console.log(response.data);
       setUsers(response?.data?.data);
+      setFilteredUsers(response?.data?.data);
     } catch (error) {
       console.error("error in getAllUser :", error);
       toast("Error while getting users data!");
     }
   };
+
+  const handleSearchUsers = async(e,searchedWord)=>{
+    e.preventDefault();
+    setSearchWord(e.target.value);
+
+    if(!searchedWord){
+      setFilteredUsers([...users]);
+      return;
+    };
+
+    // console.log(searchedWord)
+    const filteredUsers = users.filter((user)=>{
+      const userName = user?.nameName;
+      const userEmail = user?.email;
+      if(userName?.includes(searchedWord) || userEmail?.includes(searchedWord)){
+        // console.log('email:',userEmail,"\nusername:",userName);
+        return user;
+      }
+    })
+    setFilteredUsers([...filteredUsers]);
+  }
   useEffect(() => {
     getAllUsers();
   }, []);
@@ -79,6 +103,8 @@ const UsersTable = memo(() => {
               size="small"
               placeholder="Search users..."
               sx={{ width: 250 }}
+              value={searchWord}
+              onChange={(e)=>{handleSearchUsers(e,e.target.value)}}
             />
             <Button
               variant="contained"
@@ -102,7 +128,7 @@ const UsersTable = memo(() => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {users?.map((user) => (
+                {fillteredUsers?.map((user) => (
                   <TableRow
                     key={user._id}
                     hover

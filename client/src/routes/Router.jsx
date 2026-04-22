@@ -6,6 +6,7 @@ import Users from "../pages/Users";
 import Files from "../pages/Files";
 import LocalFiles from "../pages/LocalFiles";
 import PageNotFound from "../pages/PageNotFound";
+import Meeting from "../pages/Meeting";
 
 export default function Router() {
   const routingArr = createBrowserRouter([
@@ -24,6 +25,10 @@ export default function Router() {
         {
           path: "LocalFiles",
           element: <LocalFiles />,
+        },
+        {
+          path: "Meeting",
+          element: <Meeting />,
         },
       ],
     },
